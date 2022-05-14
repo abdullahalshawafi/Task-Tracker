@@ -7,16 +7,18 @@ This project was inspired from [Traversy Media Vue JS Crash Course](https://yout
 ## Project setup
 
 ```bash
+git clone https://github.com/abdullahalshawafi/Task-Tracker.git
+cd Task-Tracker/
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Compile and hot-reloads for development
 
 ```bash
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compile and minify for production
 
 ```bash
 npm run build
