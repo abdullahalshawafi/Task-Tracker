@@ -1,60 +1,73 @@
 <template>
   <div class="container">
     <Header title="Task Tracker" />
-    <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="this.tasks" />
+    <AddTask @add-task="addTask" />
+    <Tasks
+      @toggle-reminder="toggleReminder"
+      @delete-task="deleteTask"
+      :tasks="this.tasks"
+    />
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue";
+import AddTask from "./components/AddTask.vue";
 import Tasks from "./components/Tasks.vue";
 
 export default {
-    name: "App",
-    components: { Header, Tasks },
-    methods: {
-        toggleReminder(taskId) {
-          const task = this.tasks.find(task => task.id === taskId);
-          task.reminder = !task.reminder;
-        },
-        deleteTask(taskId) {
-          if (confirm("Are you sure you want to delete this task?")) {
-            this.tasks = this.tasks.filter(task => task.id !== taskId);
-          }
-        },
+  name: "App",
+  components: {
+    Header,
+    Tasks,
+    AddTask,
+  },
+  methods: {
+    addTask(task) {
+      this.tasks.push(task);
     },
-    data() {
-      return {
-        tasks: [],
-      };
+    toggleReminder(taskId) {
+      const task = this.tasks.find((task) => task.id === taskId);
+      task.reminder = !task.reminder;
     },
-    created() {
-      this.tasks = [
-        {
-            id: 1,
-            text: "Learn Vue",
-            day: "March 1st at 10:00 AM",
-            reminder: true,
-          },
-          {
-            id: 2,
-            text: "Learn Vuex",
-            day: "April 1st at 11:00 PM",
-            reminder: false,
-          },
-          {
-            id: 3,
-            text: "Learn Vue Router",
-            day: "May 1st at 12:00 PM",
-            reminder: false,
-          },
-      ]
-    }
-}
+    deleteTask(taskId) {
+      if (confirm("Are you sure you want to delete this task?")) {
+        this.tasks = this.tasks.filter((task) => task.id !== taskId);
+      }
+    },
+  },
+  data() {
+    return {
+      tasks: [],
+    };
+  },
+  created() {
+    this.tasks = [
+      {
+        id: 1,
+        text: "Learn Vue",
+        day: "March 1st at 10:00 AM",
+        reminder: true,
+      },
+      {
+        id: 2,
+        text: "Learn Vuex",
+        day: "April 1st at 11:00 PM",
+        reminder: false,
+      },
+      {
+        id: 3,
+        text: "Learn Vue Router",
+        day: "May 1st at 12:00 PM",
+        reminder: false,
+      },
+    ];
+  },
+};
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
 
 * {
   box-sizing: border-box;
@@ -63,7 +76,7 @@ export default {
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .container {
@@ -102,5 +115,4 @@ body {
   display: block;
   width: 100%;
 }
-
 </style>
