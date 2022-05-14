@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Header title="Task Tracker" />
-    <Tasks :tasks="this.tasks" />
+    <Tasks @delete-task="deleteTask" :tasks="this.tasks" />
   </div>
 </template>
 
@@ -12,6 +12,13 @@ import Tasks from "./components/Tasks.vue";
 export default {
     name: "App",
     components: { Header, Tasks },
+    methods: {
+        deleteTask(taskId) {
+          if (confirm("Are you sure you want to delete this task?")) {
+            this.tasks = this.tasks.filter(task => task.id !== taskId);
+          }
+        },
+    },
     data() {
       return {
         tasks: [],
