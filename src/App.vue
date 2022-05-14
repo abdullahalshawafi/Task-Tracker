@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Header title="Task Tracker" />
-    <Tasks @delete-task="deleteTask" :tasks="this.tasks" />
+    <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="this.tasks" />
   </div>
 </template>
 
@@ -13,6 +13,10 @@ export default {
     name: "App",
     components: { Header, Tasks },
     methods: {
+        toggleReminder(taskId) {
+          const task = this.tasks.find(task => task.id === taskId);
+          task.reminder = !task.reminder;
+        },
         deleteTask(taskId) {
           if (confirm("Are you sure you want to delete this task?")) {
             this.tasks = this.tasks.filter(task => task.id !== taskId);
