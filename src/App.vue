@@ -2,11 +2,7 @@
   <div class="container">
     <Header @toggle-add-task="toggleAddTask" title="Task Tracker" :showAddTask="showAddTask" />
     <AddTask v-show="showAddTask" @add-task="addTask" />
-    <Tasks
-      @toggle-reminder="toggleReminder"
-      @delete-task="deleteTask"
-      :tasks="this.tasks"
-    />
+    <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="this.tasks" />
   </div>
 </template>
 
@@ -23,20 +19,52 @@ export default {
     AddTask,
   },
   methods: {
-    addTask(task) {
-      this.tasks.push(task);
+    async addTask(task) {
+      const response = await fetch('api/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(task)
+      });
+      const newTask = await response.json();
+      this.tasks.push(newTask);
     },
     toggleAddTask() {
       this.showAddTask = !this.showAddTask;
     },
-    toggleReminder(taskId) {
+    async toggleReminder(taskId) {
       const task = this.tasks.find((task) => task.id === taskId);
+
+      await fetch(`api/tasks/${taskId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          reminder: !task.reminder
+        })
+      });
+      
       task.reminder = !task.reminder;
     },
-    deleteTask(taskId) {
+    async deleteTask(taskId) {
       if (confirm("Are you sure you want to delete this task?")) {
-        this.tasks = this.tasks.filter((task) => task.id !== taskId);
+        const response = await fetch(`api/tasks/${taskId}`, {
+          method: 'DELETE',
+        });
+        response.status === 200 ? (this.tasks = this.tasks.filter((task) => task.id !== taskId)) : (alert("Error deleting task"));
       }
+    },
+    async fetchTasks() {
+      const response = await fetch("api/tasks");
+      const data = await response.json();
+      return data;
+    },
+    async fetchTask(taskId) {
+      const response = await fetch(`api/tasks/${taskId}`);
+      const data = await response.json();
+      return data;
     },
   },
   data() {
@@ -45,27 +73,8 @@ export default {
       showAddTask: false,
     };
   },
-  created() {
-    this.tasks = [
-      {
-        id: 1,
-        text: "Learn Vue",
-        day: "March 1st at 10:00 AM",
-        reminder: true,
-      },
-      {
-        id: 2,
-        text: "Learn Vuex",
-        day: "April 1st at 11:00 PM",
-        reminder: false,
-      },
-      {
-        id: 3,
-        text: "Learn Vue Router",
-        day: "May 1st at 12:00 PM",
-        reminder: false,
-      },
-    ];
+  async created() {
+    this.tasks = await this.fetchTasks();
   },
 };
 </script>
