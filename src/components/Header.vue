@@ -1,7 +1,12 @@
 <template>
   <header>
     <h1>{{ title }}</h1>
-    <Button @btn-click="$emit('toggle-add-task')" :text="!showAddTask ? 'Add Task' : 'Close'" :color="showAddTask ? 'red' : 'green'" />
+    <Button
+      v-show="HomePage"
+      @btn-click="$emit('toggle-add-task')"
+      :text="!showAddTask ? 'Add Task' : 'Close'"
+      :color="showAddTask ? 'red' : 'green'"
+    />
   </header>
 </template>
 
@@ -11,13 +16,18 @@ import Button from "./Button.vue";
 export default {
   name: "Header",
   props: {
-      title: String,
-      showAddTask: Boolean,
+    title: String,
+    showAddTask: Boolean,
   },
-  components: { 
-      Button 
+  components: {
+    Button,
   },
-  emits: ["toggle-add-task"]
+  emits: ["toggle-add-task"],
+  computed: {
+    HomePage() {
+      return this.$route.path === "/";
+    },
+  },
 };
 </script>
 
