@@ -1,8 +1,7 @@
 <template>
-  <header>
+  <header v-show="HomePage">
     <h1>{{ title }}</h1>
     <Button
-      v-show="HomePage"
       @btn-click="$emit('toggle-add-task')"
       :text="!showAddTask ? 'Add Task' : 'Close'"
       :color="showAddTask ? 'red' : 'green'"
@@ -11,6 +10,8 @@
 </template>
 
 <script>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import Button from "./Button.vue";
 
 export default {
@@ -19,23 +20,14 @@ export default {
     title: String,
     showAddTask: Boolean,
   },
-  components: {
-    Button,
-  },
+  components: { Button },
   emits: ["toggle-add-task"],
-  computed: {
-    HomePage() {
-      return this.$route.path === "/";
-    },
+  setup() {
+    const route = useRoute();
+
+    const HomePage = computed(() => route.path === "/");
+
+    return { HomePage };
   },
 };
 </script>
-
-<style scoped>
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-</style>
